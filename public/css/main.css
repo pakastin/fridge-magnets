@@ -1,0 +1,59 @@
+body {
+  font-family: 'Source Serif Pro', serif;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #eee;
+}
+#timeline {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: calc(100% - 4rem);
+}
+#edit {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  font: inherit;
+  line-height: 1.5;
+  text-transform: uppercase;
+  padding: 0.2rem 0.4rem;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+}
+.fridge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #f9f9f9;
+}
+.magnet {
+  position: absolute;
+  background-color: #fff;
+  padding: 0.2rem 0.4rem;
+  line-height: 1.5;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  cursor: pointer;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+@media (min-width: 800px) {
+  .fridge {
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+  }
+}
