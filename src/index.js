@@ -1,6 +1,7 @@
 
-var http = require('http');
+var cp = require('child_process');
 var fs = require('fs');
+var http = require('http');
 var path = require('path');
 
 var express = require('express');
@@ -16,6 +17,8 @@ var FA_CSS = path.join(__dirname, '..', 'node_modules', 'font-awesome', 'css');
 var FA_FONTS = path.join(__dirname, '..', 'node_modules', 'font-awesome', 'fonts');
 var MAGNETS = path.join(__dirname, '..', 'data', 'magnets.json');
 var HISTORY = path.join(__dirname, '..', 'data', 'history.json');
+
+cp.exec('mkdir -p data');
 
 app.use(compression());
 app.use(express.static(STATIC));
