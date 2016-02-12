@@ -1,5 +1,4 @@
 
-var cp = require('child_process');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -15,56 +14,64 @@ var io = socketio(server);
 var STATIC = path.join(__dirname, '..', 'public');
 var FA_CSS = path.join(__dirname, '..', 'node_modules', 'font-awesome', 'css');
 var FA_FONTS = path.join(__dirname, '..', 'node_modules', 'font-awesome', 'fonts');
-var MAGNETS = path.join(__dirname, '..', 'data', 'magnets.json');
-var HISTORY = path.join(__dirname, '..', 'data', 'history.json');
+var DATA = path.join(__dirname, '..', 'data');
+var MAGNETS = path.join(DATA, 'magnets.json');
+var HISTORY = path.join(DATA, 'history.json');
 
-cp.exec('mkdir -p data');
+if (!fs.existsSync(DATA)) {
+  fs.mkdirSync(DATA);
+}
 
 app.use(compression());
 app.use(express.static(STATIC));
 app.use('/css', express.static(FA_CSS));
 app.use('/fonts', express.static(FA_FONTS));
 
-server.listen(8080);
-
 var SIZE = 400;
 
+var magnets = [];
+var magnetLookup = {};
 var history = [];
-
-fs.exists(MAGNETS, function (exists) {
-  if (!exists) {
-    // init magnets
-    writeMagnets();
-    console.log('magnets.json not found, initializing..');
-    return;
-  }
-  fs.readFile(MAGNETS, {encoding: 'utf8'}, function (err, _magnets) {
-    if (err) {
-      throw err;
-    }
-    console.log('magnets.json found');
-    magnets = JSON.parse(_magnets);
-  });
-});
-
-fs.exists(HISTORY, function (exists) {
-  if (!exists) {
-    console.log('history.json not found, will create..');
-    return;
-  }
-  fs.readFile(HISTORY, {encoding: 'utf8'}, function (err, _history) {
-    if (err) {
-      throw err;
-    }
-    console.log('history.json found');
-    history = JSON.parse(_history);
-  })
-});
 
 var fileaccess = {
   writing: {},
   needWrite: {}
 }
+
+if (!fs.existsSync(MAGNETS)) {
+  // init magnets
+  magnets = "hello world ! this is fridge magnets you can write with these words whatever you want it's still beta . have fun ! be nice , or else ... 😬".split(' ').map(function (word, i) {
+    return {
+      _id: i + 1,
+      text: word,
+      x: Math.random() * SIZE - SIZE / 2,
+      y: Math.random() * SIZE - SIZE / 2
+    }
+  });
+  magnetLookup = createLookup(magnets);
+  writeMagnets();
+  console.log('magnets.json not found, creating...');
+} else {
+  console.log('magnets.json found, loading...');
+  magnets = JSON.parse(fs.readFileSync(MAGNETS, {encoding: 'utf8'}));
+  magnetLookup = createLookup(magnets);
+  console.log('done.');
+}
+
+if (!fs.existsSync(HISTORY)) {
+  console.log('history.json not found, will create after first move.');
+} else {
+  console.log('history.json found, loading...');
+  history = JSON.parse(fs.readFileSync(HISTORY, {encoding: 'utf8'}));
+  console.log('done.');
+};
+
+server.listen(8080, function (err) {
+  if (err) {
+    throw err;
+  }
+  console.log('Listening on port 8080');
+});
 
 function writeMagnets () {
   if (fileaccess.writing.magnets) {
@@ -99,17 +106,6 @@ function writeHistory () {
     }
   });
 }
-
-var magnets = "hello world ! this is fridge magnets you can write with these words whatever you want it's still beta . have fun ! be nice , or else ... 😬".split(' ').map(function (word, i) {
-  return {
-    _id: i + 1,
-    text: word,
-    x: Math.random() * SIZE - SIZE / 2,
-    y: Math.random() * SIZE - SIZE / 2
-  }
-});
-
-var magnetLookup = createLookup(magnets);
 
 app.get('/magnets', function (req, res, next) {
   // TODO: MongoDB
