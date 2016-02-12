@@ -20,3 +20,4 @@ EXPOSE 8080
 
 VOLUME /app/public
 VOLUME /app/src
+VOLUME /app/data

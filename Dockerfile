@@ -17,3 +17,5 @@ RUN npm install
 
 ENTRYPOINT ["npm", "start"]
 EXPOSE 8080
+
+VOLUME /app/data
