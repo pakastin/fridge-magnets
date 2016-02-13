@@ -83,10 +83,12 @@ function writeMagnets () {
     if (err) {
       throw err;
     }
-    fileaccess.writing.magnets = false;
-    if (fileaccess.needWrite.magnets) {
-      writeMagnets();
-    }
+    setTimeout(function () {
+      fileaccess.writing.magnets = false;
+      if (fileaccess.needWrite.magnets) {
+        writeMagnets();
+      }
+    }, 5000);
   });
 }
 
@@ -100,10 +102,12 @@ function writeHistory () {
     if (err) {
       throw err;
     }
-    fileaccess.writing.history = false;
-    if (fileaccess.needWrite.history) {
-      writeMagnets();
-    }
+    setTimeout(function () {
+      fileaccess.writing.history = false;
+      if (fileaccess.needWrite.history) {
+        writeMagnets();
+      }
+    }, 5000);
   });
 }
 
